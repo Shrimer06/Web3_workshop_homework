@@ -1,0 +1,71 @@
+/* Tic-tac-toe game styles */
+.game {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: var(--font-geist-sans);
+}
+
+.gameBoard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gameInfo {
+  margin-left: 20px;
+}
+
+.gameInfo ol {
+  padding-left: 30px;
+}
+
+.status {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.boardRow {
+  display: flex;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+  cursor: pointer;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.square:hover {
+  background: #f0f0f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .square {
+    background: #333;
+    border-color: #666;
+    color: #fff;
+  }
+
+  .square:hover {
+    background: #555;
+  }
+}
