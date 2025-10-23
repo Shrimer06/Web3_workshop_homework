@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi数据可视化 - Echarts</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 DeFi数据可视化Dashboard</h1>
+
+        <div class="chart-grid">
+            <!-- TVL折线图 -->
+            <div class="chart-container">
+                <div class="chart-title">📈 DeFi借贷业务TVL变化趋势</div>
+                <div id="tvlChart" class="chart"></div>
+            </div>
+
+            <!-- DEX交易量柱状图 -->
+            <div class="chart-container">
+                <div class="chart-title">📊 不同DEX交易量对比</div>
+                <div id="dexChart" class="chart"></div>
+            </div>
+
+            <!-- ERC20持仓饼图 -->
+            <div class="chart-container">
+                <div class="chart-title">🥧 ERC20 Top10持仓地址分布</div>
+                <div id="holdersChart" class="chart"></div>
+            </div>
+
+            <!-- K线图 -->
+            <div class="chart-container">
+                <div class="chart-title">📉 代币价格走势（K线图）</div>
+                <div id="klineChart" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="charts.js"></script>
+</body>
+</html>
