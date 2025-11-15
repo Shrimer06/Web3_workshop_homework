@@ -13,6 +13,9 @@ const Child = memo(({ onClick, label }) => {
   );
 });
 
+// 添加displayName以便更好的调试
+Child.displayName = 'Child';
+
 export default function UseCallbackDemo() {
   const [count, setCount] = useState(0);
   const [text, setText] = useState('');
@@ -21,9 +24,10 @@ export default function UseCallbackDemo() {
     setCount(prev => prev + 1);
   }, []);
 
-  const handleTextChange = () => {
-    setText(text + '!');
-  };
+  // 优化：使用useCallback避免不必要的重新渲染
+  const handleTextChange = useCallback(() => {
+    setText(prev => prev + '!');
+  }, []);
 
   return (
     <div style={{ textAlign: 'center', padding: '40px', maxWidth: '500px', margin: '0 auto' }}>
