@@ -1,3 +1,16 @@
+// 优化：防抖函数，减少频繁的resize事件处理
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // 1. DeFi借贷业务TVL折线图
 function initTVLChart() {
     const chart = echarts.init(document.getElementById('tvlChart'));
@@ -120,8 +133,8 @@ function initTVLChart() {
 
     chart.setOption(option);
     
-    // 优化：使用防抖和存储resize处理器以便清理
-    const handleResize = () => chart.resize();
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
     window.addEventListener('resize', handleResize);
     
     // 返回清理函数
@@ -203,8 +216,8 @@ function initDEXChart() {
 
     chart.setOption(option);
     
-    // 优化：使用防抖和存储resize处理器以便清理
-    const handleResize = () => chart.resize();
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
     window.addEventListener('resize', handleResize);
     
     // 返回清理函数
@@ -285,8 +298,8 @@ function initHoldersChart() {
 
     chart.setOption(option);
     
-    // 优化：使用防抖和存储resize处理器以便清理
-    const handleResize = () => chart.resize();
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
     window.addEventListener('resize', handleResize);
     
     // 返回清理函数
@@ -471,8 +484,8 @@ function initKlineChart() {
 
     chart.setOption(option);
     
-    // 优化：使用防抖和存储resize处理器以便清理
-    const handleResize = () => chart.resize();
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
     window.addEventListener('resize', handleResize);
     
     // 返回清理函数
