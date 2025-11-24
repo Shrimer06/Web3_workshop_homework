@@ -1,3 +1,16 @@
+// 优化：防抖函数，减少频繁的resize事件处理
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // 1. DeFi借贷业务TVL折线图
 function initTVLChart() {
     const chart = echarts.init(document.getElementById('tvlChart'));
@@ -8,11 +21,15 @@ function initTVLChart() {
     const compoundData = [];
     const makerData = [];
 
+    // 优化：提前计算基准日期，避免循环中重复创建Date对象
+    const today = new Date();
+    const baseTime = today.getTime();
+    const msPerDay = 24 * 60 * 60 * 1000;
+
     // 生成最近30天的数据
     for (let i = 29; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        dates.push(date.toISOString().split('T')[0]);
+        const dateTime = baseTime - (i * msPerDay);
+        dates.push(new Date(dateTime).toISOString().split('T')[0]);
 
         // 模拟数据：Aave TVL在50-60亿美元之间波动
         aaveData.push((5000 + Math.random() * 1000).toFixed(2));
@@ -115,7 +132,16 @@ function initTVLChart() {
     };
 
     chart.setOption(option);
-    window.addEventListener('resize', () => chart.resize());
+    
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
+    window.addEventListener('resize', handleResize);
+    
+    // 返回清理函数
+    return () => {
+        window.removeEventListener('resize', handleResize);
+        chart.dispose();
+    };
 }
 
 // 2. DEX交易量柱状图
@@ -189,7 +215,16 @@ function initDEXChart() {
     };
 
     chart.setOption(option);
-    window.addEventListener('resize', () => chart.resize());
+    
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
+    window.addEventListener('resize', handleResize);
+    
+    // 返回清理函数
+    return () => {
+        window.removeEventListener('resize', handleResize);
+        chart.dispose();
+    };
 }
 
 // 3. ERC20持仓地址饼图
@@ -262,7 +297,16 @@ function initHoldersChart() {
     };
 
     chart.setOption(option);
-    window.addEventListener('resize', () => chart.resize());
+    
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
+    window.addEventListener('resize', handleResize);
+    
+    // 返回清理函数
+    return () => {
+        window.removeEventListener('resize', handleResize);
+        chart.dispose();
+    };
 }
 
 // 4. K线图（代币价格）
@@ -275,11 +319,15 @@ function initKlineChart() {
     const volumeData = [];
 
     let basePrice = 1800;
+    
+    // 优化：提前计算基准日期，避免循环中重复创建Date对象
+    const today = new Date();
+    const baseTime = today.getTime();
+    const msPerDay = 24 * 60 * 60 * 1000;
 
     for (let i = 59; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        dates.push(date.toISOString().split('T')[0]);
+        const dateTime = baseTime - (i * msPerDay);
+        dates.push(new Date(dateTime).toISOString().split('T')[0]);
 
         // 生成K线数据
         const open = basePrice + (Math.random() - 0.5) * 100;
@@ -435,13 +483,29 @@ function initKlineChart() {
     };
 
     chart.setOption(option);
-    window.addEventListener('resize', () => chart.resize());
+    
+    // 优化：使用防抖减少频繁的resize事件处理
+    const handleResize = debounce(() => chart.resize(), 250);
+    window.addEventListener('resize', handleResize);
+    
+    // 返回清理函数
+    return () => {
+        window.removeEventListener('resize', handleResize);
+        chart.dispose();
+    };
 }
 
-// 初始化所有图表
+// 初始化所有图表并存储清理函数
+const cleanupFunctions = [];
+
 window.onload = function() {
-    initTVLChart();
-    initDEXChart();
-    initHoldersChart();
-    initKlineChart();
+    cleanupFunctions.push(initTVLChart());
+    cleanupFunctions.push(initDEXChart());
+    cleanupFunctions.push(initHoldersChart());
+    cleanupFunctions.push(initKlineChart());
+};
+
+// 页面卸载时清理资源
+window.onbeforeunload = function() {
+    cleanupFunctions.forEach(cleanup => cleanup && cleanup());
 };

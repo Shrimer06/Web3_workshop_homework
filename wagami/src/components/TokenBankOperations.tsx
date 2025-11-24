@@ -19,12 +19,11 @@ export function TokenBankOperations() {
   // 当交易成功时，刷新数据
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
-        refetchAllowance()
-        refetchBalance()
-      }, 2000)
+      // 立即刷新，不需要等待2秒
+      refetchAllowance()
+      refetchBalance()
     }
-  }, [isSuccess])
+  }, [isSuccess, refetchAllowance, refetchBalance])
 
   // 读取当前授权额度
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
